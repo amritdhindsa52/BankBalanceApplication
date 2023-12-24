@@ -1,0 +1,82 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class BankBalanceApplication {
+
+    private double balance = 0.0; // Initial balance
+
+    private JFrame frame;
+    private JPanel panel;
+    private JButton depositButton;
+    private JButton withdrawButton;
+    private JButton showBalanceButton;
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            try {
+                new BankBalanceApplication().initialize();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public void initialize() {
+        frame = new JFrame("Bank Balance Application");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        panel = new JPanel();
+        depositButton = new JButton("Deposit");
+        withdrawButton = new JButton("Withdraw");
+        showBalanceButton = new JButton("Show Balance");
+
+        depositButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String depositAmountString = JOptionPane.showInputDialog(frame, "Enter deposit amount:");
+                try {
+                    double depositAmount = Double.parseDouble(depositAmountString);
+                    balance += depositAmount;
+                    JOptionPane.showMessageDialog(frame, "Deposit successful!");
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(frame, "Invalid input. Please enter a valid number.");
+                }
+            }
+        });
+
+        withdrawButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String withdrawAmountString = JOptionPane.showInputDialog(frame, "Enter withdrawal amount:");
+                try {
+                    double withdrawAmount = Double.parseDouble(withdrawAmountString);
+                    if (withdrawAmount <= balance) {
+                        balance -= withdrawAmount;
+                        JOptionPane.showMessageDialog(frame, "Withdrawal successful!");
+                    } else {
+                        JOptionPane.showMessageDialog(frame, "Insufficient funds!");
+                    }
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(frame, "Invalid input. Please enter a valid number.");
+                }
+            }
+        });
+
+        showBalanceButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(frame, "Your current balance is: $" + balance);
+            }
+        });
+
+        panel.add(depositButton);
+        panel.add(withdrawButton);
+        panel.add(showBalanceButton);
+
+        frame.getContentPane().add(BorderLayout.CENTER, panel);
+        frame.setSize(300, 150);
+        frame.setVisible(true);
+    }
+}
